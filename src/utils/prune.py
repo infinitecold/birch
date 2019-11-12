@@ -9,16 +9,15 @@ def main():
     dataset = sys.argv[1]
     stop_words = list(stopwords.words('english'))
     with open(dataset, 'r') as in_file, \
-        open(dataset + '_pruned', 'w') as out_file:
+            open(dataset.replace('sents.csv', 'pruned_sents.csv'), 'w') as out_file:
         for line in in_file:
             label, score, query, sent, qid, sid, qno, sno = line.strip().split('\t')
-            lower_query = [tok.lower() for tok in filter(lambda t: t not in stop_words, nltk.word_tokenize(query))]
-            lower_sent = [tok.lower() for tok in nltk.word_tokenize(sent)]
+            lower_query = filter(lambda t: t not in stop_words, query.lower().split())
             contains = False
             for q in lower_query:
-                if q in lower_sent:
+                if q in sent.lower():
                    contains = True
-            if contains:
+            if not contains:
                 out_file.write(line)
 
 

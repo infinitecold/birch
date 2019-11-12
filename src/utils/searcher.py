@@ -74,8 +74,6 @@ class Searcher:
                             seq_list = chunk_sent(sent, MAX_INPUT_LENGTH)
                             for seq in seq_list:
                                 sentno = docno + '_' + str(sentid)
-                                out.write('{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\n'.format(label, round(float(sim), 11), text, seq, qid, sentno, qid, self.didx-1))
-                                out.flush()
                                 sentid += 1
 
                                 flag = False
@@ -84,22 +82,20 @@ class Searcher:
                                         if tok not in stop_words and tok.lower() in seq.lower():
                                             flag = True
                                             break
-                                    if flag:
-                                        self.didx += 1
-                                        continue
-
-                                    out_pruned.write(
-                                        '{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\n'.format(
-                                            label, round(float(sim), 11), text,
-                                            seq, qid, sentno, qid,
-                                            self.didx - 1))
-                                    out_pruned.flush()
+                                    if not flag:
+                                        out_pruned.write(
+                                            '{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\n'.format(
+                                                label, round(float(sim), 11), text,
+                                                seq, qid, sentno, qid,
+                                                self.didx - 1))
+                                        out_pruned.flush()
+                                else:
+                                    out.write('{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\n'.format(label, round(float(sim), 11), text, seq, qid, sentno, qid, self.didx-1))
+                                    out.flush()
 
                                 self.didx += 1
                         else:
                             sentno = docno + '_' + str(sentid)
-                            out.write('{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\n'.format(label, round(float(sim), 11), text, sent, qid, sentno, qid, self.didx - 1))
-                            out.flush()
                             sentid += 1
 
                             flag = False
@@ -108,15 +104,15 @@ class Searcher:
                                     if tok not in stop_words and tok.lower() in sent.lower():
                                         flag = True
                                         break
-                                if flag:
-                                    self.didx += 1
-                                    continue
-
-                                out_pruned.write(
-                                    '{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\n'.format(
-                                        label, round(float(sim), 11), text,
-                                        sent, qid, sentno, qid, self.didx - 1))
-                                out_pruned.flush()
+                                if not flag:
+                                    out_pruned.write(
+                                        '{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\n'.format(
+                                            label, round(float(sim), 11), text,
+                                            sent, qid, sentno, qid, self.didx - 1))
+                                    out_pruned.flush()
+                            else:
+                                out.write('{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\n'.format(label, round(float(sim), 11), text, sent, qid, sentno, qid, self.didx - 1))
+                                out.flush()
 
                             self.didx += 1
                 self.qidx += 1
