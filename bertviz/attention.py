@@ -55,6 +55,12 @@ def show(tokens_a, tokens_b, attn):
     _show_attention(att_json)
 
 
+def get(tokens_a, tokens_b, attn):
+    """Returns attention visualization"""
+    attentions = _get_attentions(tokens_a, tokens_b, attn)
+    return attentions
+
+
 def _show_attention(att_json):
     display.display(display.HTML(vis_html))
     display.display(display.Javascript('window.attention = %s' % att_json))
